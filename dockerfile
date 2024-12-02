@@ -24,5 +24,4 @@ RUN dotnet publish "Limbus_wordle_backend.csproj" -c Release -o /app/publish
 FROM base AS final
 WORKDIR /app
 COPY --from=build /app/publish .
-COPY Content /app/Content
 ENTRYPOINT ["dotnet", "Limbus_wordle_backend.dll", "--urls", "http://0.0.0.0:8080"]
