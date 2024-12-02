@@ -1,0 +1,3 @@
+﻿<Project>
+  <Import Project="..\buildMultiTargeting\Limbus_wordle_backend.props" />
+</Project>
