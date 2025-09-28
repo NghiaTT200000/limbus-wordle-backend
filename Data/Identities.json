@@ -1674,7 +1674,7 @@
   "https://www.prydwen.gg/limbus-company/identities/lobotomy-e-g-o-red-eyes-and-penitence-ryoshu": {
     "Name": "Lobotomy E.G.O::Red Eyes & Penitence Ryoshu",
     "Sinner": "Ryoshu",
-    "Icon": "",
+    "Icon": "https://res.cloudinary.com/dpbeh6hnn/image/upload/v1759066506/115_sm_kjs5jd.webp",
     "Skills": [
       {
         "AttackType": "Blunt",
