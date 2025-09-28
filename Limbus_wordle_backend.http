@@ -1,6 +1,6 @@
-@Limbus_wordle_backend_HostAddress = http://localhost:8080
+@Limbus_wordle_backend._HostAddress = http://localhost:8080
 
-GET {{Limbus_wordle_backend_HostAddress}}/weatherforecast/
+GET {{Limbus_wordle_backend._HostAddress}}/weatherforecast/
 Accept: application/json
 
 ###

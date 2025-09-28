@@ -2,7 +2,7 @@ version: '3.4'
 
 services:
   web:
-    image: limbus_wordle_backend:latest
+    image: Limbus_wordle_backend.:latest
     build:
       context: .
       dockerfile: dockerfile

@@ -1,9 +1,12 @@
-using Limbus_wordle.Interfaces;
+using Limbus_wordle_backend.Interfaces;
 
-public class Identity:IEntity
+namespace Limbus_wordle_backend.Models
 {
-    public string Name { get; set;} = "";
-    public string Sinner { get; set;} = "";
-    public string Icon { get; set;} = "";
-    public List<Skill> Skills { get; set;} = [];
+    public class Identity : IEntity
+    {
+        public string Name { get; set; } = "";
+        public string Sinner { get; set; } = "";
+        public string Icon { get; set; } = "";
+        public List<Skill> Skills { get; set; } = [];
+    }
 }

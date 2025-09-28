@@ -1,4 +1,4 @@
-namespace Limbus_wordle.Interfaces
+namespace Limbus_wordle_backend.Interfaces
 {
     public interface IResponse<ResponseType>
     {

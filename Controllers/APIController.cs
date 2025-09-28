@@ -2,37 +2,25 @@
 
 using System.IO.Abstractions;
 using System.Text.Json;
-using Limbus_wordle.Services;
-using Limbus_wordle.util.Functions;
-using Microsoft.AspNetCore.DataProtection;
+using Limbus_wordle_backend.Models;
+using Limbus_wordle_backend.Services;
+using Limbus_wordle_backend.Util.Environment;
 using Microsoft.AspNetCore.Mvc;
 
 [ApiController]
 [Route("[controller]")]
-public class APIController(IDataProtectionProvider dataProtectorProvider):ControllerBase{
-    private readonly IDataProtector _dataProtector = dataProtectorProvider.CreateProtector(Environment.GetEnvironmentVariable("CookiePass"));
+public class APIController(DailyIdentityFileService dailyIdentityFileService, IdentityFileService identityFileService):ControllerBase{
+    private readonly DailyIdentityFileService _dailyIdentityFileService = dailyIdentityFileService;
+    private readonly IdentityFileService _identityFileService = identityFileService;
 
     [HttpGet("TodayIdentity")]
-    public async Task<IActionResult> TodayIdentity(){
+    public IActionResult TodayIdentity(){
 
-        return Ok(DailyIdentityGameModeService.GetDailyIdentityFile());
-    }
-
-    [HttpGet("Random")]
-    public async Task<IActionResult> Random(){
-        return Ok(RandomIdentity.Get());
+        return Ok(_dailyIdentityFileService.GetDailyIdentityFile());
     }
 
     [HttpGet("All")]
     public async Task<IActionResult> All(){
-        var rootLink = Directory.GetCurrentDirectory();
-        var identitiesFilePath = Path.Combine(rootLink, Environment.GetEnvironmentVariable("IdentityJSONFile"));
-
-        string identitiesFile = await new FileSystem().File.ReadAllTextAsync(identitiesFilePath);
-
-        var deserializeIdentities = JsonSerializer.Deserialize<Dictionary<string,Identity>>(identitiesFile)
-            ??new Dictionary<string,Identity>();
-        
-        return Ok(deserializeIdentities);
+        return Ok(await _identityFileService.getAllIdentities());
     }
 }

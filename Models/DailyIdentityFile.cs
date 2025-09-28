@@ -1,11 +1,9 @@
-using Limbus_wordle.Interfaces;
-
-namespace Limbus_wordle.Models
+namespace Limbus_wordle_backend.Models
 {
     public class DailyIdentityFile
     {
-        public String TodayID { get; set; }
-        public Identity TodayIdentity { get; set; }
-        public Identity YesterdayIdentity { get; set; }
+        public string TodayID { get; set; } = "";
+        public required Identity TodayIdentity { get; set; }
+        public required Identity YesterdayIdentity { get; set; }
     }
 }

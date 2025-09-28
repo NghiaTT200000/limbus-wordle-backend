@@ -1,8 +1,9 @@
-
-
-public class Skill
+namespace Limbus_wordle_backend.Models
 {
-    public string AttackType { get; set; } = "";
-    public string SinAffinity { get; set; } = "";
-    public int SkillCoinCount { get; set; }
+    public class Skill
+    {
+        public string AttackType { get; set; } = "";
+        public string SinAffinity { get; set; } = "";
+        public int SkillCoinCount { get; set; }
+    }
 }

@@ -1,6 +1,6 @@
-using Limbus_wordle.Interfaces;
+using Limbus_wordle_backend.Interfaces;
 
-namespace Limbus_wordle.Models
+namespace Limbus_wordle_backend.Models
 {
     public class ResponseService<ResponseType> : IResponse<ResponseType>
     {
