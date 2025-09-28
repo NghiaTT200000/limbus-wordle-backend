@@ -5,9 +5,10 @@ namespace Limbus_wordle_backend.Services.BackgroundService
         private Timer? _timer;
         private DailyIdentityFileService _dailyIdentityFileService = dailyIdentityFileService;
 
-        public async Task StartAsync(CancellationToken cancellationToken)
+        public Task StartAsync(CancellationToken cancellationToken)
         {
-            await DoWork();
+            ScheduleNextRun();
+            return Task.CompletedTask;
         }
 
         private async Task DoWork()
