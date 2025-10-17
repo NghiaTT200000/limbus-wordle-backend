@@ -1,6 +1,5 @@
 using System.IO.Abstractions;
 using dotenv.net;
-using Limbus_wordle_backend.Middleware;
 using Limbus_wordle_backend.Services;
 using Limbus_wordle_backend.Services.BackgroundService;
 using Limbus_wordle_backend.Services.WebScrapperServices;
@@ -37,6 +36,9 @@ builder.Services.AddSignalR();
 
 builder.WebHost.UseUrls(EnvironmentVariables.listenOn);
 
+builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
+builder.Services.AddProblemDetails();
+
 var app = builder.Build();
 
 
@@ -54,7 +56,7 @@ app.UseAuthorization();
 
 app.MapControllers();
 
-app.UseMiddleware<ErrorHandlerMiddleware>();
+app.UseExceptionHandler();
 
 
 app.Run();
