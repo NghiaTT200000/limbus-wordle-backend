@@ -1,5 +1,6 @@
 using System.IO.Abstractions;
 using dotenv.net;
+using Limbus_wordle_backend.Middleware;
 using Limbus_wordle_backend.Services;
 using Limbus_wordle_backend.Services.BackgroundService;
 using Limbus_wordle_backend.Services.WebScrapperServices;
@@ -25,9 +26,14 @@ builder.Services.AddCors(options =>
     options.AddPolicy(name: "AllowOrigin",
     policy  =>
         {
-            policy.WithOrigins(EnvironmentVariables.frontendUrl);
+            policy.WithOrigins(EnvironmentVariables.frontendUrl)
+                .AllowAnyHeader()
+                .AllowAnyMethod()
+                .AllowCredentials();
         });
 });
+
+builder.Services.AddSignalR();
 
 builder.WebHost.UseUrls(EnvironmentVariables.listenOn);
 
@@ -40,9 +46,15 @@ app.UseRouting();
 
 app.UseCors("AllowOrigin");
 
+app.UseDefaultFiles();
+
+app.UseStaticFiles();
+
 app.UseAuthorization();
 
 app.MapControllers();
+
+app.UseMiddleware<ErrorHandlerMiddleware>();
 
 
 app.Run();
