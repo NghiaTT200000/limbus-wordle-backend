@@ -2,12 +2,12 @@ using Limbus_wordle_backend.Models;
 
 namespace Limbus_wordle_backend.Interfaces
 {
-    public interface IGameLobbyRepository<GuessModel>
+    public interface IGameLobbyRepository
     {
-        Task<GameLobby<GuessModel>> CreateGameLobby(GameLobby<GuessModel> gameLobby);
-        Task<List<GameLobby<GuessModel>>> GetAllGameLobby();
-        Task<GameLobby<GuessModel>?> GetGameLobbyById(Guid id);
-        Task UpdateGameLobby(GameLobby<GuessModel> gameLobby);
+        Task<GameLobby> CreateGameLobby(GameLobby gameLobby);
+        Task<List<GameLobby>> GetAllGameLobby();
+        Task<GameLobby?> GetGameLobbyById(Guid id);
+        Task<GameLobby> UpdateGameLobby(GameLobby gameLobby);
         Task DeleteGameLobby(Guid id);
     }
 }

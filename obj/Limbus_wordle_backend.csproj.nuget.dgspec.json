@@ -72,6 +72,10 @@
               "target": "Package",
               "version": "[6.4.0, )"
             },
+            "System.IdentityModel.Tokens.Jwt": {
+              "target": "Package",
+              "version": "[8.14.0, )"
+            },
             "TestableIO.System.IO.Abstractions.Wrappers": {
               "target": "Package",
               "version": "[21.0.29, )"

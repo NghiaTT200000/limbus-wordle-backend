@@ -1,9 +1,11 @@
 using System.IO.Abstractions;
 using dotenv.net;
+using Limbus_wordle_backend.Hubs;
 using Limbus_wordle_backend.Services;
 using Limbus_wordle_backend.Services.BackgroundService;
 using Limbus_wordle_backend.Services.WebScrapperServices;
 using Limbus_wordle_backend.Util.Environment;
+using Microsoft.AspNetCore.SignalR;
 
 DotEnv.Load();
 var builder = WebApplication.CreateBuilder(args);
@@ -32,7 +34,10 @@ builder.Services.AddCors(options =>
         });
 });
 
-builder.Services.AddSignalR();
+builder.Services.AddSignalR(options =>
+{
+    options.AddFilter<GameAuthHubFilter>();
+});
 
 builder.WebHost.UseUrls(EnvironmentVariables.listenOn);
 
