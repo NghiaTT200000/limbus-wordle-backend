@@ -9,5 +9,11 @@ namespace Limbus_wordle_backend.Interfaces
         Task<GameLobby?> GetGameLobbyById(Guid id);
         Task<GameLobby> UpdateGameLobby(GameLobby gameLobby);
         Task DeleteGameLobby(Guid id);
+        Task StartGameAsync(Guid lobbyId);
+        Task EndGameAsync(Guid lobbyId, string reason);
+
+        event Func<Guid, DateTime?, DateTime?, Task>? GameStarted;
+        event Func<Guid, int, Task>? TimeTick;
+        event Func<string, Task>? GameEnded;
     }
 }
