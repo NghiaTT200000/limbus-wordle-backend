@@ -1,4 +1,5 @@
 using System.Runtime.Serialization;
+using Limbus_wordle_backend.Interfaces;
 
 namespace Limbus_wordle_backend.Models
 {
@@ -9,6 +10,7 @@ namespace Limbus_wordle_backend.Models
         public bool IsPrivate { get; set; } = false;
         public TimeSpan GameLength { get; set; } = TimeSpan.FromMinutes(2);
         public GameMode Mode { get; set; } = GameMode.IdentityMode;
+        public IGameLoop GameLoop { get; set; }
         public List<Player> Players { get; set; } = [];
         public List<Message> Messages { get; set; } = [];
         public bool IsGameStarted { get; set; } = false;

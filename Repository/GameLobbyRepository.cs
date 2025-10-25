@@ -3,6 +3,7 @@ using System.Collections.Concurrent;
 using Limbus_wordle_backend.Interfaces;
 using Limbus_wordle_backend.Models;
 using Limbus_wordle_backend.Models.Exceptions;
+using Limbus_wordle_backend.Services.GameLoop;
 
 namespace Limbus_wordle_backend.Repository
 {
@@ -49,6 +50,14 @@ namespace Limbus_wordle_backend.Repository
             return gameLobby;
         }
 
+        public Player UpdatePlayer(Player player){
+            var lobby = _gameLobbies[player.LobbyId].Lobby;
+            var updatedPlayer = lobby.Players.Find(p => p.Id == player.Id);
+            updatedPlayer = player;
+
+            return updatedPlayer;
+        }
+
         public async Task StartGameAsync(Guid lobbyId)
         {
             if(!_gameLobbies.TryGetValue(lobbyId, out var lobbyState))
@@ -59,9 +68,14 @@ namespace Limbus_wordle_backend.Repository
             try
             {
                 if (lobbyState.Lobby.IsGameStarted) return;
+                var gameLoop = lobbyState.Lobby.GameLoop;
                 lobbyState.Lobby.IsGameStarted = true;
                 lobbyState.Lobby.StartTimeUtc = DateTime.UtcNow;
                 lobbyState.Lobby.EndTimeUtc = lobbyState.Lobby.StartTimeUtc.Value + lobbyState.Lobby.GameLength;
+
+                var startTasks = lobbyState.Lobby.Players.Select(p => gameLoop.StartGame(p)).ToList();
+                var startedPlayers = await Task.WhenAll(startTasks);
+                lobbyState.Lobby.Players = startedPlayers.ToList();
 
                 lobbyState.Cts = new CancellationTokenSource();
                 lobbyState.RunTask = RunLobbyLoop(lobbyState, lobbyState.Cts.Token);
@@ -71,6 +85,15 @@ namespace Limbus_wordle_backend.Repository
             {
                 lobbyState.Semaphore.Release();
             }
+        }
+
+        public async Task<Player?> Guess(Player player, object guess)
+        {
+            var lobby = await GetGameLobbyById(player.LobbyId) ?? throw new LobbyNotFoundException();
+
+            var updatedPlayer = lobby.GameLoop.Guess(player, guess);
+            UpdatePlayer(updatedPlayer);
+            return updatedPlayer;
         }
 
         public async Task EndGameAsync(Guid lobbyId, string reason)

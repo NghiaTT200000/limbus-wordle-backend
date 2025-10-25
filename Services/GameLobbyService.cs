@@ -114,6 +114,22 @@ namespace Limbus_wordle_backend.Services
             return await _gameLobbyRepository.UpdateGameLobby(lobby);
         }
 
+        public async Task<Player> Guess(Player player, object guess)
+        {
+            return await _gameLobbyRepository.Guess(player, guess) ?? throw new PlayerNotFoundException();
+        }
+
+
+        public async Task StartGameAsync(Guid lobbyId)
+        {
+            await _gameLobbyRepository.StartGameAsync(lobbyId);
+        }
+
+        public async Task EndGameAsync(Guid lobbyId, string reason)
+        {
+            await _gameLobbyRepository.EndGameAsync(lobbyId, reason);
+        }
+
         public void SubscribeToEvents(GameLobbyRepositoryEventsDTO eventsDTO)
         {
             RepositoryEvents = eventsDTO;
