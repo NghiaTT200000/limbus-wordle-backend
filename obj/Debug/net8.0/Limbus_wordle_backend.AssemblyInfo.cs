@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Limbus_wordle_backend")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+247e697ce950b2954271bf23f54df77dbec58997")]
 [assembly: System.Reflection.AssemblyProductAttribute("Limbus_wordle_backend")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Limbus_wordle_backend")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
