@@ -2,7 +2,7 @@ using Limbus_wordle_backend.Services;
 using Limbus_wordle_backend.Util.Environment;
 using Microsoft.AspNetCore.SignalR;
 
-namespace Limbus_wordle_backend.Hubs
+namespace Limbus_wordle_backend.Hubs.Filter
 {
     public class GameAuthHubFilter : IHubFilter
     {

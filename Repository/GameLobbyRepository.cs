@@ -9,22 +9,22 @@ namespace Limbus_wordle_backend.Repository
 {
     public class GameLobbyRepository : IGameLobbyRepository
     {
-        private static readonly ConcurrentDictionary<Guid, LobbyState> _gameLobbies = new();
+        private static readonly ConcurrentDictionary<string, LobbyState> _gameLobbies = new();
 
-        public event Func<Guid, DateTime?, DateTime?, Task>? GameStarted;
-        public event Func<Guid, int, Task>? TimeTick;
+        public event Func<string, DateTime?, DateTime?, Task>? GameStarted;
+        public event Func<string, int, Task>? TimeTick;
         public event Func<string, Task>? GameEnded;
 
         public async Task<GameLobby> CreateGameLobby(GameLobby gameLobby)
         {
             var state = new LobbyState(gameLobby);
-            _gameLobbies.TryAdd(gameLobby.Id, state);
+            _gameLobbies.TryAdd(gameLobby.LobbyCode, state);
             return await Task.FromResult(gameLobby);
         }
 
-        public async Task DeleteGameLobby(Guid id)
+        public async Task DeleteGameLobby(string lobbyCode)
         {
-            _gameLobbies.TryRemove(id, out _);
+            _gameLobbies.TryRemove(lobbyCode, out _);
             await Task.CompletedTask;
         }
 
@@ -33,15 +33,15 @@ namespace Limbus_wordle_backend.Repository
             return await Task.FromResult(_gameLobbies.Values.Select(ls => ls.Lobby).ToList());
         }
 
-        public async Task<GameLobby?> GetGameLobbyById(Guid id)
+        public async Task<GameLobby?> GetGameLobbyById(string lobbyCode)
         {
-            _gameLobbies.TryGetValue(id, out var lobby);
+            _gameLobbies.TryGetValue(lobbyCode, out var lobby);
             return await Task.FromResult(lobby?.Lobby);
         }
 
         public async Task<GameLobby> UpdateGameLobby(GameLobby gameLobby)
         {
-            _gameLobbies.AddOrUpdate(gameLobby.Id, new LobbyState(gameLobby), (_, lobbyState) => 
+            _gameLobbies.AddOrUpdate(gameLobby.LobbyCode, new LobbyState(gameLobby), (_, lobbyState) =>
                 {
                     lobbyState.Lobby = gameLobby;
                     return lobbyState;
@@ -51,16 +51,16 @@ namespace Limbus_wordle_backend.Repository
         }
 
         public Player UpdatePlayer(Player player){
-            var lobby = _gameLobbies[player.LobbyId].Lobby;
+            var lobby = _gameLobbies[player.LobbyCode].Lobby;
             var updatedPlayer = lobby.Players.Find(p => p.Id == player.Id);
             updatedPlayer = player;
 
             return updatedPlayer;
         }
 
-        public async Task StartGameAsync(Guid lobbyId)
+        public async Task StartGameAsync(string lobbyCode)
         {
-            if(!_gameLobbies.TryGetValue(lobbyId, out var lobbyState))
+            if(!_gameLobbies.TryGetValue(lobbyCode, out var lobbyState))
             {
                 throw new LobbyNotFoundException();
             }
@@ -79,7 +79,7 @@ namespace Limbus_wordle_backend.Repository
 
                 lobbyState.Cts = new CancellationTokenSource();
                 lobbyState.RunTask = RunLobbyLoop(lobbyState, lobbyState.Cts.Token);
-                GameStarted?.Invoke(lobbyState.Lobby.Id, lobbyState.Lobby.StartTimeUtc, lobbyState.Lobby.EndTimeUtc);
+                GameStarted?.Invoke(lobbyState.Lobby.LobbyCode, lobbyState.Lobby.StartTimeUtc, lobbyState.Lobby.EndTimeUtc);
             }
             finally
             {
@@ -89,16 +89,16 @@ namespace Limbus_wordle_backend.Repository
 
         public async Task<Player?> Guess(Player player, object guess)
         {
-            var lobby = await GetGameLobbyById(player.LobbyId) ?? throw new LobbyNotFoundException();
+            var lobby = await GetGameLobbyById(player.LobbyCode) ?? throw new LobbyNotFoundException();
 
             var updatedPlayer = lobby.GameLoop.Guess(player, guess);
             UpdatePlayer(updatedPlayer);
             return updatedPlayer;
         }
 
-        public async Task EndGameAsync(Guid lobbyId, string reason)
+        public async Task EndGameAsync(string lobbyCode, string reason)
         {
-            if (!_gameLobbies.TryGetValue(lobbyId, out var gameState)) return;
+            if (!_gameLobbies.TryGetValue(lobbyCode, out var gameState)) return;
             CancellationTokenSource? ctsToCancel = null;
 
             await gameState.Semaphore.WaitAsync();
@@ -123,7 +123,7 @@ namespace Limbus_wordle_backend.Repository
         private async Task RunLobbyLoop(LobbyState state, CancellationToken token)
         {
             var lobby = state.Lobby;
-            var id = lobby.Id;
+            var lobbyCode = lobby.LobbyCode;
 
             try
             {
@@ -135,12 +135,12 @@ namespace Limbus_wordle_backend.Repository
 
                     if (remainingSeconds <= 0)
                     {
-                        await (TimeTick?.Invoke(id, 0) ?? Task.CompletedTask);
-                        await EndGameAsync(id, "time_up");
+                        await (TimeTick?.Invoke(lobbyCode, 0) ?? Task.CompletedTask);
+                        await EndGameAsync(lobbyCode, "time_up");
                         break;
                     }
 
-                    await (TimeTick?.Invoke(id, remainingSeconds) ?? Task.CompletedTask);
+                    await (TimeTick?.Invoke(lobbyCode, remainingSeconds) ?? Task.CompletedTask);
 
                     // use Task.Delay for tick; compute next delay to reduce drift
                     var delay = remaining > TimeSpan.FromSeconds(1) ? TimeSpan.FromSeconds(1) : remaining;

@@ -5,7 +5,7 @@ namespace Limbus_wordle_backend.Models
     public class Player
     {
         public Guid Id { get; set; }
-        public Guid LobbyId { get; set; }
+        public string LobbyCode { get; set; } = "";
         public string Name { get; set; } = "";
         public int Score { get; set; } = 0;
         public bool IsHost { get; set; } = false;

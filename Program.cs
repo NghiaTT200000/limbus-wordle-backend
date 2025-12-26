@@ -1,6 +1,7 @@
 using System.IO.Abstractions;
 using dotenv.net;
 using Limbus_wordle_backend.Hubs;
+using Limbus_wordle_backend.Hubs.Filter;
 using Limbus_wordle_backend.Services;
 using Limbus_wordle_backend.Services.BackgroundService;
 using Limbus_wordle_backend.Services.WebScrapperServices;
@@ -60,6 +61,8 @@ app.UseStaticFiles();
 app.UseAuthorization();
 
 app.MapControllers();
+
+app.MapHub<GameLobbyHub>("/hubs/gamelobby");
 
 app.UseExceptionHandler();
 

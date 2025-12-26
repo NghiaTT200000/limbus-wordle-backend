@@ -15,9 +15,9 @@ namespace Limbus_wordle_backend.Services
             return await _gameLobbyRepository.CreateGameLobby(gameLobby);
         }
 
-        public async Task DeleteGameLobby(Guid id)
+        public async Task DeleteGameLobby(string lobbyCode)
         {
-            await _gameLobbyRepository.DeleteGameLobby(id);
+            await _gameLobbyRepository.DeleteGameLobby(lobbyCode);
         }
 
         public async Task<List<GameLobby>> GetAllGameLobby()
@@ -33,7 +33,7 @@ namespace Limbus_wordle_backend.Services
 
         public async Task<Player?> RemovePlayerFromLobby(PlayerRemoveDTO playerRemoveDTO)
         {
-            var lobby = await _gameLobbyRepository.GetGameLobbyById(playerRemoveDTO.LobbyId) ?? 
+            var lobby = await _gameLobbyRepository.GetGameLobbyById(playerRemoveDTO.LobbyCode) ??
                 throw new LobbyNotFoundException();
             var player = lobby.Players.FirstOrDefault(p => p.Id == playerRemoveDTO.PlayerId);
             if (player != null)
@@ -44,7 +44,7 @@ namespace Limbus_wordle_backend.Services
             {
                 if(lobby.Players.Count == 0)
                 {
-                    await _gameLobbyRepository.DeleteGameLobby(lobby.Id);
+                    await _gameLobbyRepository.DeleteGameLobby(lobby.LobbyCode);
                     return player;
                 }
                 var newHost = lobby.Players.FirstOrDefault(p => p.Id == playerRemoveDTO.NewHostId);
@@ -58,9 +58,9 @@ namespace Limbus_wordle_backend.Services
             return player;
         }
 
-        public async Task<Player> MoveHost(Guid lobbyId, Guid newHostId)
+        public async Task<Player> MoveHost(string lobbyCode, Guid newHostId)
         {
-            var lobby = await _gameLobbyRepository.GetGameLobbyById(lobbyId) ?? 
+            var lobby = await _gameLobbyRepository.GetGameLobbyById(lobbyCode) ??
                 throw new LobbyNotFoundException();
             var currentHost = lobby.Players.FirstOrDefault(p => p.IsHost);
             if (currentHost != null)
@@ -74,41 +74,41 @@ namespace Limbus_wordle_backend.Services
             return newHost;
         }
 
-        public async Task<GameLobby?> AddPlayerToLobby(Guid lobbyId, Player player)
+        public async Task<GameLobby?> AddPlayerToLobby(string lobbyCode, Player player)
         {
-            var lobby = await _gameLobbyRepository.GetGameLobbyById(lobbyId) ?? 
+            var lobby = await _gameLobbyRepository.GetGameLobbyById(lobbyCode) ??
                 throw new LobbyNotFoundException();
             if(!lobby.Players.Contains(player))
             {
-                player.LobbyId = lobbyId;
+                player.LobbyCode = lobbyCode;
                 lobby.Players.Add(player);
-            } 
+            }
             return await _gameLobbyRepository.UpdateGameLobby(lobby);
         }
 
-        public async Task<GameLobby> EnterPublicLobby(Guid lobbyId, Player player)
+        public async Task<GameLobby> EnterPublicLobby(string lobbyCode, Player player)
         {
-            var lobby = await _gameLobbyRepository.GetGameLobbyById(lobbyId) ?? throw new LobbyNotFoundException();
+            var lobby = await _gameLobbyRepository.GetGameLobbyById(lobbyCode) ?? throw new LobbyNotFoundException();
             lobby.Players.Add(player);
             return await _gameLobbyRepository.UpdateGameLobby(lobby);
         }
 
-        public async Task<GameLobby> GetGameLobbyById(Guid id)
+        public async Task<GameLobby> GetGameLobbyById(string lobbyCode)
         {
-            return await _gameLobbyRepository.GetGameLobbyById(id) ?? throw new LobbyNotFoundException();
+            return await _gameLobbyRepository.GetGameLobbyById(lobbyCode) ?? throw new LobbyNotFoundException();
         }
 
-        public async Task<List<Message>> SendMessageToLobby(Guid lobbyId, Message message)
+        public async Task<List<Message>> SendMessageToLobby(string lobbyCode, Message message)
         {
-            var lobby = await _gameLobbyRepository.GetGameLobbyById(lobbyId) ?? throw new LobbyNotFoundException();
+            var lobby = await _gameLobbyRepository.GetGameLobbyById(lobbyCode) ?? throw new LobbyNotFoundException();
             lobby.Messages.Add(message);
             await _gameLobbyRepository.UpdateGameLobby(lobby);
             return lobby.Messages;
         }
 
-        public async Task<GameLobby> UpdateGameLobby(GameLobbyUpdateDTO gameLobbyUpdateDTO, Guid lobbyId)
+        public async Task<GameLobby> UpdateGameLobby(GameLobbyUpdateDTO gameLobbyUpdateDTO, string lobbyCode)
         {
-            var lobby = await _gameLobbyRepository.GetGameLobbyById(lobbyId) ?? throw new LobbyNotFoundException();
+            var lobby = await _gameLobbyRepository.GetGameLobbyById(lobbyCode) ?? throw new LobbyNotFoundException();
             lobby.MaxPlayers = gameLobbyUpdateDTO.MaxPlayers;
             lobby.GameLength = gameLobbyUpdateDTO.GameLength;
             return await _gameLobbyRepository.UpdateGameLobby(lobby);
@@ -120,14 +120,14 @@ namespace Limbus_wordle_backend.Services
         }
 
 
-        public async Task StartGameAsync(Guid lobbyId)
+        public async Task StartGameAsync(string lobbyCode)
         {
-            await _gameLobbyRepository.StartGameAsync(lobbyId);
+            await _gameLobbyRepository.StartGameAsync(lobbyCode);
         }
 
-        public async Task EndGameAsync(Guid lobbyId, string reason)
+        public async Task EndGameAsync(string lobbyCode, string reason)
         {
-            await _gameLobbyRepository.EndGameAsync(lobbyId, reason);
+            await _gameLobbyRepository.EndGameAsync(lobbyCode, reason);
         }
 
         public void SubscribeToEvents(GameLobbyRepositoryEventsDTO eventsDTO)

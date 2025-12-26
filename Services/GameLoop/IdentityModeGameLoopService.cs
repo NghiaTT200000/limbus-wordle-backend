@@ -1,4 +1,3 @@
-using System.Threading.Tasks;
 using Limbus_wordle_backend.Interfaces;
 using Limbus_wordle_backend.Models;
 using Newtonsoft.Json;
@@ -8,7 +7,7 @@ namespace Limbus_wordle_backend.Services.GameLoop
     public class IdentityModeGameLoopService(int MaxGuess = 6) : IGameLoop
     {
         public int MaxGuess { get; set; } = MaxGuess;
-        private IdentityFileService identityFileService = new IdentityFileService();
+        private readonly IdentityFileService identityFileService = new();
 
         public Player Guess(Player player, object guess)
         {
