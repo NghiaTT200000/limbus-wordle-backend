@@ -1,9 +1,11 @@
+using Limbus_wordle_backend.Services.IdentityFile;
+
 namespace Limbus_wordle_backend.Services.Background
 {
-    public class BackgroundResetDailyIdentityMode(DailyIdentityFileService dailyIdentityFileService) : IHostedService, IDisposable
+    public class BackgroundResetDailyIdentityMode(IdentityFileService identityFileService) : IHostedService, IDisposable
     {
         private Timer? _timer;
-        private DailyIdentityFileService _dailyIdentityFileService = dailyIdentityFileService;
+        private IdentityFileService _identityFileService = identityFileService;
 
         public Task StartAsync(CancellationToken cancellationToken)
         {
@@ -14,7 +16,7 @@ namespace Limbus_wordle_backend.Services.Background
         private async Task DoWork()
         {
             Console.WriteLine(DateTime.Today.ToString()+" Resetting daily identity");
-            await _dailyIdentityFileService.Reset();
+            await _identityFileService.Reset();
             ScheduleNextRun();
         }
 

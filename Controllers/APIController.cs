@@ -1,16 +1,15 @@
-using Limbus_wordle_backend.Services;
+using Limbus_wordle_backend.Services.IdentityFile;
 using Microsoft.AspNetCore.Mvc;
 
 [ApiController]
 [Route("[controller]")]
-public class APIController(DailyIdentityFileService dailyIdentityFileService, IdentityFileService identityFileService):ControllerBase{
-    private readonly DailyIdentityFileService _dailyIdentityFileService = dailyIdentityFileService;
+public class APIController(IdentityFileService identityFileService):ControllerBase{
     private readonly IdentityFileService _identityFileService = identityFileService;
 
     [HttpGet("TodayIdentity")]
     public IActionResult TodayIdentity(){
 
-        return Ok(_dailyIdentityFileService.GetDailyIdentityFile());
+        return Ok(_identityFileService.GetDailyIdentityFile());
     }
 
     [HttpGet("All")]

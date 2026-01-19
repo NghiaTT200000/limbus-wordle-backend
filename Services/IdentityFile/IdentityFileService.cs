@@ -4,13 +4,13 @@ using Limbus_wordle_backend.Repositories;
 using Limbus_wordle_backend.Util.Environment;
 using Newtonsoft.Json;
 
-namespace Limbus_wordle_backend.Services.IdentityFileService
+namespace Limbus_wordle_backend.Services.IdentityFile
 {
-    public class DailyIdentityFileService
+    public class IdentityFileService
     {
         private DailyIdentityFile DailyIdentityFile {get; set;}
         private IdentityFileRepository IdentityFileRepository { get; set; }
-        public DailyIdentityFileService(IdentityFileRepository identityFileRepository)
+        public IdentityFileService(IdentityFileRepository identityFileRepository)
         {
             var defaultYesterdayIdentity = new Identity()
             {
@@ -77,6 +77,11 @@ namespace Limbus_wordle_backend.Services.IdentityFileService
         {
             return DailyIdentityFile;
         } 
+
+        public async Task<Dictionary<string, Identity>> GetAllIdentities()
+        {
+            return await IdentityFileRepository.GetAllIdentities();
+        }
 
         public async Task Reset()
         {

@@ -1,14 +1,15 @@
 using System.Web;
 using HtmlAgilityPack;
 using Limbus_wordle_backend.Models.Entities;
+using Limbus_wordle_backend.Repositories;
 using Limbus_wordle_backend.Util.Environment;
 using Limbus_wordle_backend.Util.Functions.FileUpload;
 
 namespace Limbus_wordle_backend.Services.Scraping
 {
-    public class ScrapeIdentitiesService(IdentityFileService identityFileService)
+    public class ScrapeIdentitiesService(IdentityFileRepository identityFileRepository)
     {
-        private IdentityFileService _identityFileService { get; set; } = identityFileService;
+        private IdentityFileRepository _identityFileRepository { get; set; } = identityFileRepository;
         public async Task ScrapAsync()
         {
             var web = new HtmlWeb();
@@ -17,7 +18,7 @@ namespace Limbus_wordle_backend.Services.Scraping
             var rootLink = Directory.GetCurrentDirectory();
             var filePath = Path.Combine(rootLink, EnvironmentVariables.identitiesFilePath);
 
-            var identities = await _identityFileService.GetAllIdentities();
+            var identities = await _identityFileRepository.GetAllIdentities();
 
 
             //Get the links to all identities
@@ -61,7 +62,7 @@ namespace Limbus_wordle_backend.Services.Scraping
                     }
                 }
             }
-            await _identityFileService.SaveAllIdentities(identities);
+            await _identityFileRepository.SaveAllIdentities(identities);
         }
     }
 
