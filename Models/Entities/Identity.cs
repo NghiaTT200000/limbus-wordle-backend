@@ -1,6 +1,6 @@
 using Limbus_wordle_backend.Interfaces;
 
-namespace Limbus_wordle_backend.Models
+namespace Limbus_wordle_backend.Models.Entities
 {
     public class Identity : IEntity
     {

@@ -1,4 +1,4 @@
-namespace Limbus_wordle_backend.Models
+namespace Limbus_wordle_backend.Models.Entities
 {
     public class Skill
     {

@@ -1,9 +1,6 @@
+using Limbus_wordle_backend.Services.Scraping;
 
-
-
-using Limbus_wordle_backend.Services.WebScrapperServices;
-
-namespace Limbus_wordle_backend.Services.BackgroundService
+namespace Limbus_wordle_backend.Services.Background
 {
     public class BackgroundScrapeData(ScrapeIdentitiesService scrapeIdentitiesService) : IHostedService, IDisposable
     {

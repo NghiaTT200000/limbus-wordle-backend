@@ -1,4 +1,4 @@
-namespace Limbus_wordle_backend.Services.BackgroundService
+namespace Limbus_wordle_backend.Services.Background
 {
     public class BackgroundResetDailyIdentityMode(DailyIdentityFileService dailyIdentityFileService) : IHostedService, IDisposable
     {

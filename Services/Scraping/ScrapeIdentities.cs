@@ -1,10 +1,10 @@
 using System.Web;
 using HtmlAgilityPack;
-using Limbus_wordle_backend.Models;
+using Limbus_wordle_backend.Models.Entities;
 using Limbus_wordle_backend.Util.Environment;
 using Limbus_wordle_backend.Util.Functions.FileUpload;
 
-namespace Limbus_wordle_backend.Services.WebScrapperServices
+namespace Limbus_wordle_backend.Services.Scraping
 {
     public class ScrapeIdentitiesService(IdentityFileService identityFileService)
     {
@@ -17,7 +17,7 @@ namespace Limbus_wordle_backend.Services.WebScrapperServices
             var rootLink = Directory.GetCurrentDirectory();
             var filePath = Path.Combine(rootLink, EnvironmentVariables.identitiesFilePath);
 
-            var identities = await _identityFileService.getAllIdentities();
+            var identities = await _identityFileService.GetAllIdentities();
 
 
             //Get the links to all identities
@@ -61,7 +61,7 @@ namespace Limbus_wordle_backend.Services.WebScrapperServices
                     }
                 }
             }
-            await _identityFileService.saveAllIdentities(identities);
+            await _identityFileService.SaveAllIdentities(identities);
         }
     }
 

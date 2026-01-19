@@ -1,10 +1,4 @@
-
-
-using System.IO.Abstractions;
-using System.Text.Json;
-using Limbus_wordle_backend.Models;
 using Limbus_wordle_backend.Services;
-using Limbus_wordle_backend.Util.Environment;
 using Microsoft.AspNetCore.Mvc;
 
 [ApiController]
@@ -21,6 +15,6 @@ public class APIController(DailyIdentityFileService dailyIdentityFileService, Id
 
     [HttpGet("All")]
     public async Task<IActionResult> All(){
-        return Ok(await _identityFileService.getAllIdentities());
+        return Ok(await _identityFileService.GetAllIdentities());
     }
 }

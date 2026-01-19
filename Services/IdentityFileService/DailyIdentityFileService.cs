@@ -1,16 +1,16 @@
 using System.IO.Abstractions;
-using Limbus_wordle_backend.Models;
+using Limbus_wordle_backend.Models.Entities;
+using Limbus_wordle_backend.Repositories;
 using Limbus_wordle_backend.Util.Environment;
-using Limbus_wordle_backend.Util.Functions;
 using Newtonsoft.Json;
 
-namespace Limbus_wordle_backend.Services
+namespace Limbus_wordle_backend.Services.IdentityFileService
 {
     public class DailyIdentityFileService
     {
         private DailyIdentityFile DailyIdentityFile {get; set;}
-        private IdentityFileService _identityFileService { get; set; }
-        public DailyIdentityFileService(IdentityFileService identityFileService)
+        private IdentityFileRepository IdentityFileRepository { get; set; }
+        public DailyIdentityFileService(IdentityFileRepository identityFileRepository)
         {
             var defaultYesterdayIdentity = new Identity()
             {
@@ -70,7 +70,7 @@ namespace Limbus_wordle_backend.Services
                 YesterdayIdentity = defaultYesterdayIdentity,
                 TodayIdentity = defaultTodayIdentity
             };
-            _identityFileService = identityFileService;
+            IdentityFileRepository = identityFileRepository;
         }
 
         public DailyIdentityFile GetDailyIdentityFile()
@@ -89,8 +89,8 @@ namespace Limbus_wordle_backend.Services
                 DailyIdentityFile deserializeDailyIdentities = new()
                 {
                     TodayID = Guid.NewGuid().ToString(),
-                    TodayIdentity = await _identityFileService.randomIdentity(),
-                    YesterdayIdentity = await _identityFileService.randomIdentity(),
+                    TodayIdentity = await IdentityFileRepository.RandomIdentity(),
+                    YesterdayIdentity = await IdentityFileRepository.RandomIdentity(),
                 };
                 DailyIdentityFile? yesterdayIdentityFile = JsonConvert.DeserializeObject<DailyIdentityFile>(dailyIdentityFile);
 
@@ -98,7 +98,7 @@ namespace Limbus_wordle_backend.Services
                 {
                     deserializeDailyIdentities.TodayID = Guid.NewGuid().ToString();
                     deserializeDailyIdentities.YesterdayIdentity = yesterdayIdentityFile.TodayIdentity;
-                    deserializeDailyIdentities.TodayIdentity = await _identityFileService.randomIdentity();
+                    deserializeDailyIdentities.TodayIdentity = await IdentityFileRepository.RandomIdentity();
                 } 
 
                 Console.WriteLine("Daily: "+JsonConvert.SerializeObject(deserializeDailyIdentities));
