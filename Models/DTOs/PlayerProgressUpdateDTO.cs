@@ -1,10 +1,9 @@
-namespace Limbus_wordle_backend.Models.Entities
+using Limbus_wordle_backend.Models.Entities;
+
+namespace Limbus_wordle_backend.Models.DTOs
 {
-    public class PlayerProgress
+    public class PlayerProgressUpdateDTO
     {
-        public string Id { get; set; } = "";
-        public string LobbyId { get; set; } = "";
-        public string Name { get; set; } = "";
         public int Score { get; set; } = 0;
         public bool IsReady { get; set; } = false;
         public int RoundWon { get; set; } = 0;

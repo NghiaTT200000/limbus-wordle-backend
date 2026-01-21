@@ -14,12 +14,12 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
-builder.Services.AddSingleton<IdentityFileService>(); 
 builder.Services.AddTransient<ScrapeIdentitiesService>();
 builder.Services.AddHostedService<BackgroundScrapeData>();
 builder.Services.AddHostedService<BackgroundResetDailyIdentityMode>(); 
 builder.Services.AddTransient<IFileSystem,FileSystem>();
-builder.Services.AddScoped<IdentityFileRepository>();
+builder.Services.AddSingleton<IdentityFileRepository>();
+builder.Services.AddSingleton<IdentityFileService>(); 
 builder.Services.AddDataProtection();
 
 builder.Services.AddCors(options =>

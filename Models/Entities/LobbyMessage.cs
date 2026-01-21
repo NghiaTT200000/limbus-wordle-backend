@@ -2,9 +2,9 @@ namespace Limbus_wordle_backend.Models.Entities
 {
     public class LobbyMessage
     {
-        public Guid Id { get; set; }
-        public Guid LobbyId { get; set; }
-        public Guid PlayerId { get; set; }
+        public string Id { get; set; } = "";
+        public string LobbyId { get; set; } = "";
+        public string PlayerId { get; set; } = "";
         public string Message { get; set; } = "";
         public DateTime SentAt { get; set; }
     }
